@@ -1,0 +1,7 @@
+{
+  "description": "Small game for RPis and LED matrices",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^1.8.10"
+  }
+}
