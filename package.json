@@ -3,6 +3,7 @@
   "license": "MIT",
   "repository": "git@github.com:floriansimon1/rpi.git",
   "dependencies": {
+    "lodash": "^4.14.1",
     "node-rpi-rgb-led-matrix": "^0.1.0"
   }
 }
