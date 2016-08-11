@@ -188,6 +188,16 @@ const game = () => {
 
 			var restartIntervalId = setTimeout(game, 10000);
 
+            controller.on("keyup", function handler(key) {
+                if (key === "SPACE") {
+                    clearTimeout(restartIntervalId);
+
+                    controller.removeListener("keyup", handler);
+
+                    game();
+                }
+            });
+
 			matrix.clear();
 
 			drawScore("left", player1Color, player1Score, 4);
@@ -200,14 +210,6 @@ const game = () => {
 				matrix.setPixel(x, height - 1, color.r, color.g, color.b);
 				matrix.setPixel(x, height - 2, color.r, color.g, color.b);
 			});
-
-            controller.once("keyup", key => {
-                if (key === "SPACE") {
-                    clearTimeout(restartIntervalId);
-
-                    game();
-                }
-            });
 		}
 	};
 
@@ -268,10 +270,10 @@ const game = () => {
 
 	// Main loop.
 	drawInterval = setInterval(() => {
-		const scoringPlayer = moveBall();
-
 		movePlayer("P1");
 		movePlayer("P2");
+
+		const scoringPlayer = moveBall();
 
 		matrix.clear();
 
