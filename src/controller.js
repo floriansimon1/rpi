@@ -5,38 +5,59 @@ const _            = require("lodash");
 var devices;
 var pressed;
 
+var nbPlayers = 2;
+
 var controller = new EventEmitter();
 
+const keyPath = (byte, value, shift) => ({ byte, value, shift });
+
 const keys = {
-    ESCAPE:  41,
-    SPACE:   44,
-    P2_UP:   82,
-    P2_DOWN: 81,
-    P1_UP:   26,
-    P1_DOWN: 22
+    LEFT:    keyPath(3, 0, 4),
+    UP:      keyPath(4, 0, 4),
+    Y:       keyPath(5, 128),
+    RIGHT:   keyPath(3, 255),
+    DOWN:    keyPath(4, 255),
+    SELECT:  keyPath(6, 16),
+    START:   keyPath(6, 32),
+    A:       keyPath(5, 32),
+    B:       keyPath(5, 64),
+    X:       keyPath(5, 16),
+    LT:      keyPath(6, 1),
+    RT:      keyPath(6, 2)
 };
 
 const keyNames = Object.keys(keys);
 
-const keyByCode = _.zipObject(_.values(keys), keyNames);
-
-controller.keysPressed = _.zipObject(keyNames, _.times(keyNames.length, _.constant(false)));
+controller.keysPressed = _.zipObject(
+    _.range(1, 3),
+    _.times(nbPlayers, () => _.zipObject(keyNames, keyNames.map(_.constant(false))))
+);
 
 controller.initialize = () => {
-    devices = HID.devices().map(device => new HID.HID(device.path));
+    devices = HID
+    .devices()
+    .filter(device => (
+        device.vendorId === 121
+        && device.productId === 17
+    ))
+    .map((device, i) => Object.assign(new HID.HID(device.path), { player: i + 1 }));
 
     devices.forEach(device => {
         device.on('data', data => {
-            const pressed = new Set(_(data).drop(2).takeWhile().value());
+            keyNames.forEach(keyName => {
+                const keyPath = keys[keyName];
 
-            keyNames.forEach(key => {
-                if (controller.keysPressed[key]) {
-                    controller.emit('keyup', key);
-                } else if (pressed.has(keys[key])) {
-                    controller.emit('keydown', key);
+                const pressed = (
+                    keyPath.shift
+                    ? (data[keyPath.byte] >> keyPath.shift) === keyPath.value
+                    : (data[keyPath.byte] & keyPath.value) === keyPath.value
+                );
+
+                if (controller.keysPressed[device.player][keyName] !== pressed) {
+                    controller.emit(`key${pressed ? 'down' : 'up'}`, device.player, keyName);
                 }
-                
-                controller.keysPressed[key] = pressed.has(keys[key]);
+
+                controller.keysPressed[device.player][keyName] = pressed;
             });
         });
     });
