@@ -1,8 +1,11 @@
 const LedMatrix  = require("node-rpi-rgb-led-matrix");
-const controller = require("./controller");
-const symbols    = require("./symbols");
+const controller = require("./io/controller");
 const utils      = require("./utils");
 const _          = require("lodash");
+
+var matrix = new LedMatrix(32, 2);
+
+const render = require('./render')(matrix);
 
 controller.initialize();
 
@@ -14,20 +17,11 @@ controller.on('keydown', (__, key) => {
     }
 });
 
-var matrix = new LedMatrix(32, 2);
-
 const game = () => {
-        // A few constants.
-    const fieldColor         = { r: 255, g: 255, b: 255 };
-    const player1Color       = { r: 0,   g: 0,   b: 255 };
-    const ballColor          = { r: 255, g: 255, b: 0 };
-    const player2Color       = { r: 255, g: 0,   b: 0 };
-    const gameSpeed          = 50;
+    // A few constants.
+    const gameSpeed          = 200;
     const width              = 64;
     const height             = 32;
-    const racketHeight       = 6;
-    const middleCircleRadius = 5;
-    const racketStep         = 3;
 
     // A few functions used in init.
     const centerBall = () => {
@@ -55,101 +49,6 @@ const game = () => {
     })();
 
     centerBall();
-
-    // Functions.
-    const drawSymbol = (symbol, optionalX, optionalY, optionalColor) => {
-        const colorsByLetter = {
-            X: { r: 255, g: 150, b: 150 },
-            O: { r: 255, g:   0, b:   0 },
-            K: { r:  68, g:  21, b:   0 }
-        };
-
-        const symbolWidth  = symbol[0].length;
-        const symbolHeight = symbol.length;
-
-        var x = optionalX;
-        var y = optionalY;
-
-        if (optionalX === undefined) {
-            y = Math.round(Math.random() * height);
-            x = Math.round(Math.random() * width);
-        }
-
-        _.range(symbolWidth).forEach(i => {
-            _.range(symbolHeight).forEach(j => {
-                const letter = symbol[j][i];
-                const a      = x + i;
-                const b      = y + j;
-
-                var color = optionalColor || colorsByLetter[letter];
-
-                if (letter !== " ") {
-                    matrix.setPixel(
-                        x + i, y + j,
-                        color.r, color.g, color.b
-                    );
-                }
-            });
-        });
-    };
-
-    const drawField = () => {
-        // Middle line
-        _.range(height).forEach(i => {
-            matrix.setPixel(width / 2 - 1, i, fieldColor.r, fieldColor.g, fieldColor.b);
-            matrix.setPixel(width / 2, i, fieldColor.r, fieldColor.g, fieldColor.b);
-        });
-
-        // Center circle
-        ["left", "right"].forEach(horizontal => (
-            ["top", "bottom"].forEach(vertical => {
-                const centerX = width / 2 - (horizontal === "left" ? 1  : 0);
-                const centerY = height / 2 - (vertical === "top" ? 1 : 0);
-
-                const xMultiplier = horizontal === "left" ? -1 : 1;
-                const yMultiplier = vertical === "top" ? -1 : 1;
-
-                _.range(middleCircleRadius).forEach(i => (
-                    _.range(middleCircleRadius).forEach(j => {
-                        const circleX = centerX + i * xMultiplier;
-                        const circleY = centerY + j * yMultiplier;
-
-                        const distance = utils.distance(centerX, centerY, circleX, circleY);
-
-                        if (Math.round(distance) === middleCircleRadius - 1) {
-                            matrix.setPixel(
-                                circleX, circleY,
-                                fieldColor.r, fieldColor.g, fieldColor.b
-                            );
-                        }
-                    })
-                ))
-            })
-        ));
-    };
-
-    const drawPlayer = (side, color, y) => {
-        const x = side === "left" ? 1 : width - 2;
-
-        _.range(racketHeight).forEach(i => {
-            matrix.setPixel(x, y + i, color.r, color.g, color.b);
-        });
-    };
-
-    const drawScore = (side, color, score, y) => {
-        drawSymbol(
-            symbols.digits[score],
-            width / 2 + (side === "left" ? -8 : 5 ),
-            y, color
-        );
-    };
-
-    const drawBall = (color, x, y) => {
-        matrix.setPixel(x,     y,     color.r, color.g, color.b);
-        matrix.setPixel(x + 1, y,     color.r, color.g, color.b);
-        matrix.setPixel(x,     y + 1, color.r, color.g, color.b);
-        matrix.setPixel(x + 1, y + 1, color.r, color.g, color.b);
-    };
 
     const movePlayer = playerName => {
         const playerNo = playerName[1];
@@ -271,26 +170,7 @@ const game = () => {
     };
 
     // Main loop.
-    drawInterval = setInterval(() => {
-        movePlayer("P1");
-        movePlayer("P2");
-
-        const scoringPlayer = moveBall();
-
-        matrix.clear();
-
-        drawField();
-
-        drawScore("right", player2Color, player2Score, 2);
-        drawScore("left", player1Color, player1Score, 2);
-
-        drawPlayer("right", player2Color, player2Y);
-        drawPlayer("left", player1Color, player1Y);
-
-        drawBall(ballColor, Math.round(ballX), Math.round(ballY));
-
-        if (scoringPlayer) incrementScore(scoringPlayer);
-    }, gameSpeed);
+    drawInterval = setInterval(() => render(gameState = nextState(gameState)), gameSpeed);
 };
 
 game();
