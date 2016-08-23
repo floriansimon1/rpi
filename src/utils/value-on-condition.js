@@ -1,3 +1,5 @@
+"use strict";
+
 const Maybe = require("data.maybe");
 
 module.exports = (value, evaluatedCondition) => (

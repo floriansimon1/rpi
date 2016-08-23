@@ -1,3 +1,5 @@
+"use strict";
+
 const valueOnCondition = require("../utils/value-on-condition");
 const between          = require("../utils/between");
 const clamp            = require("../utils/clamp");

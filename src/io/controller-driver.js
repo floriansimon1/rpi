@@ -1,9 +1,11 @@
+"use strict";
+
 /*
 * Driver for a SNES controller I bought from Amazon from a
 * seller called Kabalo, aka Headphone Centre Ltd.
 *
 * lsusb lists the device as "Dragonfly USB"
-* 
+*
 * Product ID: 17
 * Vendor  ID: 121
 */

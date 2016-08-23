@@ -1,3 +1,5 @@
+"use strict";
+
 const Ball             = require("./ball");
 const Player           = require("./player");
 const Immutable        = require("immutable");

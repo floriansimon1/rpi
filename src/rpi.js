@@ -1,3 +1,5 @@
+"use strict";
+
 const LedMatrix  = require("node-rpi-rgb-led-matrix");
 const Controller = require("./io/controller-driver");
 const GameState  = require("./core/game-state");

@@ -1,3 +1,5 @@
+"use strict";
+
 // Note: the following code assumes even RGB panel dimensions.
 
 let GameFacts = {

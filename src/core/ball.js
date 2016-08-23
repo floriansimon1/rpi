@@ -1,3 +1,5 @@
+"use strict";
+
 const randomSign = require('./utils/random-sign');
 const callUntil  = require('./utils/call-until');
 const methodify  = require('./utils/methodify');

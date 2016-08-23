@@ -1,3 +1,5 @@
+"use strict";
+
 const GameFacts  = require("../core/game-facts");
 const Directions = require("../core/directions");
 const distance   = require("../utils/distance");

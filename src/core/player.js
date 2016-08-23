@@ -1,3 +1,5 @@
+"use strict";
+
 const Immutable = require("immutable");
 const GameFacts = require("./game-facts");
 const methodify = require("../utils/methodify");
