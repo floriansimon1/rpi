@@ -117,7 +117,9 @@ GameState.next = (gameState, previousGameState, controllers) => {
 
                 collision.player.map(playerIndex => {
                     // Increases the ball speed.
-                    gameState.ball = gameState.ball.set("speed", (
+                    gameState.ball = gameState.ball.set("speed", clamp(
+                        0,
+                        GameFacts.maxBallSpeed,
                         gameState.ball.speed + GameFacts.bounceSpeedIncrement
                     ));
 

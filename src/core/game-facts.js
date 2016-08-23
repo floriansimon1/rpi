@@ -27,6 +27,7 @@ let GameFacts = {
     /* VELOCITIES (px/s) */
     /*********************/
     racketSpeed:          6,
+    maxBallSpeed:         8,
     initialBallSpeed:     4,
     bounceSpeedIncrement: 0.2,
 
