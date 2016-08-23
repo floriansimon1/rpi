@@ -83,7 +83,7 @@ GameState.next = (gameState, previousGameState, controllers) => {
         gameState.players = new Immutable.List(
             _
             .zip(gameState.players, controllers)
-            .map(_.spread(Player.move))
+            .map(_.spread((player, controller) => player.move(Δs, controller)))
         );
 
         // Collision detection occurs only if there has already been movement.

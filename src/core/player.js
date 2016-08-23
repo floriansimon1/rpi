@@ -7,7 +7,7 @@ let PlayerRecord = Immutable.Record({
     y:     GameFacts.centeredRacketPosition
 });
 
-PlayerRecord.move = Player.move = (player, controller) => {
+PlayerRecord.move = Player.move = (player, Δs, controller) => {
     const playerNo = playerName[1];
 
     const down = player.controller.keysPressed.DOWN ? 1 : 0;
@@ -15,7 +15,7 @@ PlayerRecord.move = Player.move = (player, controller) => {
 
     const direction = up + down;
 
-    var newY = player.y + direction * racketStep;
+    var newY = player.y + direction * GameFacts.racketSpeed * Δs;
 
     if (newY < GameFacts.lowestY) {
         newY = GameFacts.lowestY;
