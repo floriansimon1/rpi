@@ -2,6 +2,7 @@ const randomSign = require('./utils/random-sign');
 const callUntil  = require('./utils/call-until');
 const methodify  = require('./utils/methodify');
 const between    = require('./utils/between');
+const between    = require('./utils/clamp');
 const Immutable  = require("immutable");
 
 let Ball = Immutable.Record({
@@ -30,8 +31,16 @@ Ball.move = (ball, Δs) => {
     const Δx = Math.cos(ball.angle) * traveled * ball.xDirection;
 
     return ball
-    .set("x", ball.x + Δx)
-    .set("y", ball.y + Δy);
+    .set("x", clamp(
+        GameFacts.lowestX,
+        GameFacts.highestX - (GameFacts.ballWidth - 1),
+        ball.x + Δx
+    ))
+    .set("y", clamp(
+        GameFacts.lowestY,
+        GameFacts.highestY - (GameFacts.ballHeight - 1),
+        ball.y + Δy
+    ));
 };
 
 Ball.oppositeXDirection = ball => ball.xDirection * -1;

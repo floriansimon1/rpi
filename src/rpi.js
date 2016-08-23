@@ -5,13 +5,21 @@ const GameFacts  = require("./core/game-facts");
 const Maybe      = require("data.maybe");
 const utils      = require("./utils");
 
+const availableControllers = Controller.list();
+
+if (availableControllers.length < 2) {
+    console.log("Please connect at least 2 controllers to play.");
+
+    process.exit();
+}
+
 // Initializes the render function.
 const render = require('./render')(new LedMatrix(
     GameFacts.singlePanelWidth, GameFacts.nbPanels
 ));
 
 // Initializes controllers.
-let controllers = Controller.list().map(Controller);
+let controllers = availableControllers.map(Controller);
 
 // Convenience exit function.
 var exit = () => {
