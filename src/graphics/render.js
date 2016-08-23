@@ -5,6 +5,33 @@ const symbols    = require("./symbols");
 const _          = require("lodash");
 
 module.exports = matrix => {
+    const victoryScreen = gameState => {
+        const playerColor = GameFacts[`player${gameState.victoryDetails.get().winnerIndex + 1}Color`];
+
+        drawScore(Directions.RIGHT, player2Color, gameState.players[1].score, GameFacts.victoryScoreY);
+        drawScore(Directions.LEFT, player1Color, gameState.players[0].score, GameFacts.victoryScoreY);
+
+        _.range(GameFacts.width).forEach(x => {
+            matrix.setPixel(x, GameFacts.lowestY, color.r, color.g, color.b);
+            matrix.setPixel(x, GameFacts.lowestY + 1, color.r, color.g, color.b);
+
+            matrix.setPixel(x, GameFacts.highestY, color.r, color.g, color.b);
+            matrix.setPixel(x, GameFacts.highestY - 1, color.r, color.g, color.b);
+        });
+    };
+
+    const gameScreen = gameState => {
+        drawField();
+
+        drawScore(Directions.RIGHT, GameFacts.player2Color, gameState.players[1].score, GameFacts.gameScoreY);
+        drawScore(Directions.LEFT, GameFacts.player1Color, gameState.players[0].score, GameFacts.gameScoreY);
+
+        drawPlayer(Directions.RIGHT, GameFacts.player2Color, gameState.players[1].y);
+        drawPlayer(Directions.LEFT, GameFacts.player1Color, gameState.players[0].y);
+
+        drawBall(GameFacts.ballColor, Math.round(gameState.ballX), Math.round(gameState.ballY));
+    };
+
     const drawSymbol = (symbol, optionalX, optionalY, optionalColor) => {
         const symbolWidth  = symbol[0].length;
         const symbolHeight = symbol.length;
@@ -79,7 +106,7 @@ module.exports = matrix => {
     };
 
     const drawPlayer = (side, color, y) => {
-        const x = side === Directions.LEFT ? 1 : GameFacts.width - 2;
+        const x = side === Directions.LEFT ? GameFacts.leftRacketX : GameFacts.rightRacketX;
 
         _.range(GameFacts.racketHeight).forEach(y => {
             matrix.setPixel(x, y + i, color.r, color.g, color.b);
@@ -100,23 +127,20 @@ module.exports = matrix => {
     };
 
     const drawBall = (color, x, y) => {
-        matrix.setPixel(x,     y,     color.r, color.g, color.b);
-        matrix.setPixel(x + 1, y,     color.r, color.g, color.b);
-        matrix.setPixel(x,     y + 1, color.r, color.g, color.b);
-        matrix.setPixel(x + 1, y + 1, color.r, color.g, color.b);
+        _.range(GameFacts.ballWidth).forEach(ballX => {
+            _.range(GameFacts.ballHeight).forEach(ballY => {
+                matrix.setPixel(ballX + x, ballY + y, color.r, color.g, color.b);
+            });
+        });
     };
 
     return gameState => {
         matrix.clear();
 
-        drawField();
-
-        drawScore(Directions.RIGHT, GameFacts.player2Color, gameState.player2Score, 2);
-        drawScore(Directions.LEFT, GameFacts.player1Color, gameState.player1Score, 2);
-
-        drawPlayer(Directions.RIGHT, GameFacts.player2Color, gameState.player2Y);
-        drawPlayer(Directions.LEFT, GameFacts.player1Color, gameState.player1Y);
-
-        drawBall(ballColor, Math.round(gameState.ballX), Math.round(gameState.ballY));
+        if (gameState.victoryDetails.isJust) {
+            victoryScreen();
+        } else {
+            gameScreen();
+        }
     };
 };
