@@ -1,10 +1,11 @@
 "use strict";
 
-const randomSign = require('./utils/random-sign');
-const callUntil  = require('./utils/call-until');
-const methodify  = require('./utils/methodify');
-const between    = require('./utils/between');
-const between    = require('./utils/clamp');
+const randomSign = require("../utils/random-sign");
+const callUntil  = require("../utils/call-until");
+const methodify  = require("../utils/methodify");
+const between    = require("../utils/between");
+const clamp      = require("../utils/clamp");
+const GameFacts  = require("./game-facts");
 const Immutable  = require("immutable");
 
 let Ball = Immutable.Record({

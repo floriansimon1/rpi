@@ -5,7 +5,6 @@ const Controller = require("./io/controller-driver");
 const GameState  = require("./core/game-state");
 const GameFacts  = require("./core/game-facts");
 const Maybe      = require("data.maybe");
-const utils      = require("./utils");
 
 const availableControllers = Controller.list();
 

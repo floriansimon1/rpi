@@ -9,7 +9,7 @@ const _ = require("lodash");
 */
 module.exports = (Constructor, functionNames) => {
     functionNames.forEach(functionName => {
-        const f = Constructor[functionsName];
+        const f = Constructor[functionName];
 
         Constructor.prototype[functionName] = function () {
             return f.apply([this].concat(arguments));

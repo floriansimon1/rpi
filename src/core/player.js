@@ -4,12 +4,12 @@ const Immutable = require("immutable");
 const GameFacts = require("./game-facts");
 const methodify = require("../utils/methodify");
 
-let PlayerRecord = Immutable.Record({
+let Player = Immutable.Record({
     score: 0,
     y:     GameFacts.centeredRacketPosition
 });
 
-PlayerRecord.move = Player.move = (player, Δs, controller) => {
+Player.move = (player, Δs, controller) => {
     const playerNo = playerName[1];
 
     const down = player.controller.keysPressed.DOWN ? 1 : 0;

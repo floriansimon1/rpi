@@ -23,7 +23,8 @@ const Collision = Immutable.Record({
 let Collisions = { Collision };
 
 Collisions.yRacketLine = _.curry((state, oldState, playerIndex) => ({
-    lo: Math.min(state.players[playerIndex].y, oldState.players[playerIndex].y)
+    lo: Math.min(state.players[playerIndex].y, oldState.players[playerIndex].y),
+
     hi: Math.max(
         state.players[playerIndex].y + GameFacts.rackeHeight,
         oldState.players[playerIndex].y + GameFacts.rackeHeight
