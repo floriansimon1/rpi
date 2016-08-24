@@ -50,7 +50,7 @@ let Controller = function (path) {
 
     self.private.device = new HID.HID(path);
 
-    self.keysPressed = keyNames.reduce((keyName, keysPressed) => {
+    self.keysPressed = keyNames.reduce((keysPressed, keyName) => {
         keysPressed[keyName] = false;
 
         return keysPressed;
