@@ -44,7 +44,7 @@ let Controller = function (path) {
 
     self.private = {};
 
-    if (!Controller.list().find(device => device.path === path)) {
+    if (!Controller.list().find(devicePath => devicePath === path)) {
         throw Controller.InvalidDeviceError;
     }
 
