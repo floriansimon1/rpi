@@ -17,8 +17,8 @@ let GameFacts = {
     racketHeight:       6,
     middleCircleRadius: 5,
 
-    leftScoreXCenterDistance: -9,
-    rightScoreXCenterDistance: 8,
+    leftScoreXCenterDistance: -10,
+    rightScoreXCenterDistance: 7,
 
     victoryScoreY: 4,
     gameScoreY:    2,
