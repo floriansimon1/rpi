@@ -18,7 +18,7 @@ let GameFacts = {
     middleCircleRadius: 5,
 
     leftScoreXCenterDistance: -9,
-    rightScoreXCenterDistance: 10,
+    rightScoreXCenterDistance: 8,
 
     victoryScoreY: 4,
     gameScoreY:    2,
