@@ -15,7 +15,7 @@ if (availableControllers.length < 2) {
 }
 
 // Initializes the render function.
-const render = require("./graphics/render")({clear,setPixel} || new LedMatrix(
+const render = require("./graphics/render")(new LedMatrix(
     GameFacts.singlePanelWidth, GameFacts.nbPanels
 ));
 
