@@ -1,10 +1,12 @@
 "use strict";
 
+const _                = require("lodash");
 const Ball             = require("./ball");
 const Player           = require("./player");
 const Immutable        = require("immutable");
 const Maybe            = require("data.maybe");
 const Collisions       = require("./collisions");
+const Directions       = require("./directions");
 const clamp            = require("../utils/clamp");
 const methodify        = require("../utils/methodify");
 const valueOnCondition = require("../utils/value-on-condition");
@@ -40,7 +42,7 @@ GameState.initial = () => new GameState({
 
 // "playerIndex" is the player index in the players array.
 const incrementScore = (gameState, playerIndex) => {
-    const player = gameState.players[playerIndex];
+    const player = gameState.players.get(playerIndex);
 
     const newScore = player.score + 1;
 
@@ -50,10 +52,10 @@ const incrementScore = (gameState, playerIndex) => {
             player.set("score", newScore)
         ))
     ))
-    .set("wonBy", (
+    .set("victoryDetails", (
         newScore === 10
-        ? Maybe.of(playerIndex)
-        : gameState.wonBy
+        ? Maybe.of({ winnerIndex: playerIndex })
+        : gameState.victoryDetails
     ));
 };
 
@@ -84,7 +86,7 @@ GameState.next = (gameState, previousGameState, controllers) => {
         // Player movement.
         gameState.players = new Immutable.List(
             _
-            .zip(gameState.players, controllers)
+            .zip(gameState.players.toArray(), controllers)
             .map(_.spread((player, controller) => player.move(Δs, controller)))
         );
 

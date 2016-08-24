@@ -3,43 +3,65 @@
 const GameFacts  = require("../core/game-facts");
 const Directions = require("../core/directions");
 const distance   = require("../utils/distance");
+const Maybe      = require("data.maybe");
 const symbols    = require("./symbols");
 const _          = require("lodash");
 
 module.exports = matrix => {
     const victoryScreen = gameState => {
-        const playerColor = GameFacts[`player${gameState.victoryDetails.get().winnerIndex + 1}Color`];
+        const playerColor = playerIndex => GameFacts[`player${playerIndex + 1}Color`];
 
-        drawScore(Directions.RIGHT, player2Color, gameState.players[1].score, GameFacts.victoryScoreY);
-        drawScore(Directions.LEFT, player1Color, gameState.players[0].score, GameFacts.victoryScoreY);
+        const winnerColor = playerColor(gameState.victoryDetails.get().winnerIndex);
+
+        drawScore(
+            Directions.RIGHT,
+            playerColor(1),
+            gameState.players.get(1).score,
+            GameFacts.victoryScoreY
+        );
+
+        drawScore(
+            Directions.LEFT,
+            playerColor(0),
+            gameState.players.get(0).score,
+            GameFacts.victoryScoreY
+        );
 
         _.range(GameFacts.width).forEach(x => {
-            matrix.setPixel(x, GameFacts.lowestY, color.r, color.g, color.b);
-            matrix.setPixel(x, GameFacts.lowestY + 1, color.r, color.g, color.b);
+            matrix.setPixel(x, GameFacts.lowestY, winnerColor.r, winnerColor.g, winnerColor.b);
+            matrix.setPixel(x, GameFacts.lowestY + 1, winnerColor.r, winnerColor.g, winnerColor.b);
 
-            matrix.setPixel(x, GameFacts.highestY, color.r, color.g, color.b);
-            matrix.setPixel(x, GameFacts.highestY - 1, color.r, color.g, color.b);
+            matrix.setPixel(x, GameFacts.highestY, winnerColor.r, winnerColor.g, winnerColor.b);
+            matrix.setPixel(x, GameFacts.highestY - 1, winnerColor.r, winnerColor.g, winnerColor.b);
         });
     };
 
     const gameScreen = gameState => {
         drawField();
 
-        drawScore(Directions.RIGHT, GameFacts.player2Color, gameState.players[1].score, GameFacts.gameScoreY);
-        drawScore(Directions.LEFT, GameFacts.player1Color, gameState.players[0].score, GameFacts.gameScoreY);
+        drawScore(
+            Directions.RIGHT,
+            GameFacts.player2Color,
+            gameState.players.get(1).score,
+            GameFacts.gameScoreY
+        );
 
-        drawPlayer(Directions.RIGHT, GameFacts.player2Color, gameState.players[1].y);
-        drawPlayer(Directions.LEFT, GameFacts.player1Color, gameState.players[0].y);
+        drawScore(
+            Directions.LEFT,
+            GameFacts.player1Color,
+            gameState.players.get(0).score,
+            GameFacts.gameScoreY
+        );
+
+        drawPlayer(Directions.RIGHT, GameFacts.player2Color, gameState.players.get(1).y);
+        drawPlayer(Directions.LEFT, GameFacts.player1Color, gameState.players.get(0).y);
 
         drawBall(GameFacts.ballColor, Math.round(gameState.ballX), Math.round(gameState.ballY));
     };
 
-    const drawSymbol = (symbol, optionalX, optionalY, optionalColor) => {
+    const drawSymbol = (symbol, xOffset, yOffset, optionalColor) => {
         const symbolWidth  = symbol[0].length;
         const symbolHeight = symbol.length;
-
-        const xOffset = optionalX.getOrElse(Math.round(Math.random() * GameFacts.width));
-        const yOffset = optionalY.getOrElse(Math.round(Math.random() * GameFacts.heigth));
 
         _.range(symbolWidth).forEach(symbolX => {
             _.range(symbolHeight).forEach(symbolY => {
@@ -124,7 +146,7 @@ module.exports = matrix => {
                 : GameFacts.rightScoreXCenterDistance
             ),
             y,
-            color
+            Maybe.of(color)
         );
     };
 
@@ -140,9 +162,9 @@ module.exports = matrix => {
         matrix.clear();
 
         if (gameState.victoryDetails.isJust) {
-            victoryScreen();
+            victoryScreen(gameState);
         } else {
-            gameScreen();
+            gameScreen(gameState);
         }
     };
 };

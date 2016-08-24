@@ -24,10 +24,10 @@ let Ball = Immutable.Record({
     y: GameFacts.ballCenterY
 });
 
-Ball.initial = values => Object.assign(new Ball({
+Ball.initial = values => new Ball(Object.assign({
     proportion: callUntil(randomAngle, between(GameFacts.minAngle, GameFacts.maxAngle)),
     xDirection: randomSign()
-}), values || {});
+}, values || {}));
 
 Ball.move = (ball, Δs) => {
     const traveled = Δs * ball.speed;

@@ -12,7 +12,7 @@ module.exports = (Constructor, functionNames) => {
         const f = Constructor[functionName];
 
         Constructor.prototype[functionName] = function () {
-            return f.apply([this].concat(arguments));
+            return f.apply(null, [this].concat([].slice.call(arguments)));
         };
     });
 };

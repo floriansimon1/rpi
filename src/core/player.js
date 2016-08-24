@@ -10,10 +10,8 @@ let Player = Immutable.Record({
 });
 
 Player.move = (player, Δs, controller) => {
-    const playerNo = playerName[1];
-
-    const down = player.controller.keysPressed.DOWN ? 1 : 0;
-    const up   = player.controller.keysPressed.UP ? -1 : 0;
+    const down = controller.keysPressed.DOWN ? 1 : 0;
+    const up   = controller.keysPressed.UP ? -1 : 0;
 
     const direction = up + down;
 

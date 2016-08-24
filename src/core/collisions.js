@@ -23,25 +23,27 @@ const Collision = Immutable.Record({
 let Collisions = { Collision };
 
 Collisions.yRacketLine = _.curry((state, oldState, playerIndex) => ({
-    lo: Math.min(state.players[playerIndex].y, oldState.players[playerIndex].y),
+    lo: Math.min(state.players.get(playerIndex).y, oldState.players.get(playerIndex).y),
 
     hi: Math.max(
-        state.players[playerIndex].y + GameFacts.rackeHeight,
-        oldState.players[playerIndex].y + GameFacts.rackeHeight
+        state.players.get(playerIndex).y + GameFacts.rackeHeight,
+        oldState.players.get(playerIndex).y + GameFacts.rackeHeight
     )
 }));
 
 // Returns a collision object.
 Collisions.detectBallCollisions = (state, oldState) => {
-    const racketLine = Collisions.yRacketLine(state, oldState, playerIndex);
+    const makeRacketLine = Collisions.yRacketLine(state, oldState);
 
-    const ballYOnYRacketLine = between(
-        racketLine.lo,
-        racketLine.hi,
-        clamp(GameFacts.lowestY, GameFacts.racketMaxPosiion, state.ball.y)
-    );
+    const ballYOnYRacketLine = playerIndex => {
+        const racketLine = makeRacketLine(playerIndex);
 
-    const yBallOnYRacketLine = Collisions.yBallOnYRacketLine(state, oldState);
+        return between(
+            racketLine.lo,
+            racketLine.hi,
+            clamp(GameFacts.lowestY, GameFacts.racketMaxPosiion, state.ball.y)
+        )
+    };
 
     const top = valueOnCondition(Directions.TOP, state.ball.y <= GameFacts.lowestY);
 
@@ -68,6 +70,8 @@ Collisions.detectBallCollisions = (state, oldState) => {
         state.ball.x >= GameFacts.highestX - (GameFacts.playerCollisionZoneWidth - 1)
     ))
     .chain(() => valueOnCondition(1, ballYOnYRacketLine(1)))
+
+    const player = leftPlayer.orElse(() => rightPlayer);
 
     return vertical
     .orElse(() => horizontal)
