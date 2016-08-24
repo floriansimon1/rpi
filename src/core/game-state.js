@@ -78,7 +78,7 @@ GameState.next = (gameState, previousGameState, controllers) => {
         gameState.currentTime = newTime;
 
         // Time elapsed since last frame.
-        const Δs = (newTime - oldTime) / Math.pow(10, 6);
+        const Δs = (newTime - oldTime) / Math.pow(10, 9);
 
         // Ball movement.
         gameState.ball = gameState.ball.move(Δs);
