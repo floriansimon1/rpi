@@ -40,7 +40,7 @@ const keyNames = Object.keys(keys);
 * can be called as a factory.
 */
 let Controller = function (path) {
-    let self = Object.create(Controller.prototype);
+    let self = Object.create(EventEmitter.prototype);
 
     self.private = {};
 
