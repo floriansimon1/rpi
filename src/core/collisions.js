@@ -38,7 +38,7 @@ Collisions.detectBallCollisions = (state, oldState) => {
     const ballYOnYRacketLine = between(
         racketLine.lo,
         racketLine.hi,
-        clamp(GameFacts.lowestY, GameFacts.highestX, state.ball.y)
+        clamp(GameFacts.lowestY, GameFacts.racketMaxPosiion, state.ball.y)
     );
 
     const yBallOnYRacketLine = Collisions.yBallOnYRacketLine(state, oldState);
