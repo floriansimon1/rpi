@@ -140,7 +140,7 @@ module.exports = matrix => {
     const drawScore = (side, color, score, y) => {
         drawSymbol(
             symbols.digits[score],
-            GameFacts.centerX + (
+            GameFacts.xCenter + (
                 side === Directions.LEFT
                 ? GameFacts.leftScoreXCenterDistance
                 : GameFacts.rightScoreXCenterDistance
