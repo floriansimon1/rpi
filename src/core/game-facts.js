@@ -65,13 +65,13 @@ let GameFacts = {
 /*************************/
 /* CALCULATED DIMENSIONS */
 /*************************/
-GameFacts.centeredRacketPosition = (GameFacts.height - GameFacts.racketHeight ) / 2;
+GameFacts.centeredRacketPosition = (GameFacts.height - GameFacts.racketHeight) / 2;
+GameFacts.ballCenterY            = (GameFacts.height - GameFacts.ballHeight) / 2;
+GameFacts.ballCenterX            = (GameFacts.width - GameFacts.ballWidth) / 2;
 GameFacts.highestY               = GameFacts.height - GameFacts.lowestY - 1;
 GameFacts.highestX               = GameFacts.width - GameFacts.lowestX - 1;
-GameFacts.ballCenterY            = GameFacts.height / 2 - 1;
 GameFacts.leftMiddleLineX        = GameFacts.width / 2 - 1;
-GameFacts.ballCenterX            = GameFacts.width / 2 - 1;
-GameFacts.yCenter                = GameFacts.heigth / 2;
+GameFacts.yCenter                = GameFacts.height / 2;
 GameFacts.rightMiddleLineX       = GameFacts.width / 2;
 GameFacts.xCenter                = GameFacts.width / 2;
 
