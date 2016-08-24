@@ -8,25 +8,19 @@ const Maybe      = require("data.maybe");
 
 const availableControllers = Controller.list();
 
-/*if (availableControllers.length < 2) {
+if (availableControllers.length < 2) {
     console.log("Please connect at least 2 controllers to play.");
 
     process.exit();
-}*/
-var clear=()=>{};
-var setPixel=()=>{};
+}
+
 // Initializes the render function.
 const render = require("./graphics/render")({clear,setPixel} || new LedMatrix(
     GameFacts.singlePanelWidth, GameFacts.nbPanels
 ));
 
 // Initializes controllers.
-//let controllers = availableControllers.map(Controller);
-var controllers = require("lodash").times(2, () => ({
-    on: () => {},
-    close: () => {},
-    keysPressed: {}
-}));
+let controllers = availableControllers.map(Controller);
 
 // Convenience exit function.
 var exit = () => {
