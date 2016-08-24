@@ -8,6 +8,8 @@ const clamp      = require("../utils/clamp");
 const GameFacts  = require("./game-facts");
 const Immutable  = require("immutable");
 
+const randomAngle = () => Math.random() * 2 * Math.PI;
+
 let Ball = Immutable.Record({
     // One of 1 or -1.
     xDirection: 1,
@@ -23,7 +25,7 @@ let Ball = Immutable.Record({
 });
 
 Ball.initial = values => Object.assign(new Ball({
-    proportion: callUntil(Math.random, between(GameFacts.minAngle, GameFacts.maxAngle)),
+    proportion: callUntil(randomAngle, between(GameFacts.minAngle, GameFacts.maxAngle)),
     xDirection: randomSign()
 }), values || {});
 
