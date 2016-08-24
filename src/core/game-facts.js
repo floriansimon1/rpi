@@ -14,7 +14,7 @@ let GameFacts = {
 
     ballWidth:          2,
     ballHeight:         2,
-    racketSize:         6,
+    racketHeight:       6,
     middleCircleRadius: 5,
 
     victoryScoreY: 4,
@@ -62,7 +62,7 @@ let GameFacts = {
 /*************************/
 /* CALCULATED DIMENSIONS */
 /*************************/
-GameFacts.centeredRacketPosition = (GameFacts.height - GameFacts.racketSize) / 2;
+GameFacts.centeredRacketPosition = (GameFacts.height - GameFacts.racketHeight ) / 2;
 GameFacts.highestY               = GameFacts.height - GameFacts.lowestY - 1;
 GameFacts.highestX               = GameFacts.width - GameFacts.lowestX - 1;
 GameFacts.ballCenterY            = GameFacts.height / 2 - 1;
@@ -72,7 +72,7 @@ GameFacts.yCenter                = GameFacts.heigth / 2;
 GameFacts.rightMiddleLineX       = GameFacts.width / 2;
 GameFacts.xCenter                = GameFacts.width / 2;
 
-GameFacts.racketMaxPosition = GameFacts.highestY - GameFacts.racketSize;
+GameFacts.racketMaxPosition = GameFacts.highestY - GameFacts.racketHeight;
 GameFacts.rightRacketX      = GameFacts.highestX - 1
 GameFacts.leftRacketX       = GameFacts.lowestX + 1;
 

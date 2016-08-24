@@ -132,8 +132,8 @@ module.exports = matrix => {
     const drawPlayer = (side, color, y) => {
         const x = side === Directions.LEFT ? GameFacts.leftRacketX : GameFacts.rightRacketX;
 
-        _.range(GameFacts.racketHeight).forEach(y => {
-            matrix.setPixel(x, y + i, color.r, color.g, color.b);
+        _.range(GameFacts.racketHeight).forEach(racketY => {
+            matrix.setPixel(x, y + racketY, color.r, color.g, color.b);
         });
     };
 
