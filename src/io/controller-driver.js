@@ -52,6 +52,8 @@ let Controller = function (path) {
 
     self.keysPressed = keyNames.reduce((keyName, keysPressed) => {
         keysPressed[keyName] = false;
+
+        return keysPressed;
     }, {});
 
     self.private.device.on("data", data => {
