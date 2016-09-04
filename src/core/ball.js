@@ -33,7 +33,7 @@ Ball.move = (ball, Δs) => {
     const travelled  = Δs * ball.speed;
     const yDirection = ball.angle > Math.PI / 2 ? 1 : -1;
 
-    const Δy = yDirection *(
+    const Δy = yDirection * (
         ball.angle !== Math.PI / 2
         ? Math.cos(ball.angle < Math.PI / 2 ? ball.angle : Math.PI - ball.angle) * travelled
         : 0
