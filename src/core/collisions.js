@@ -45,9 +45,9 @@ Collisions.detectBallCollisions = (state, oldState) => {
         )
     };
 
-    const top = valueOnCondition(Directions.TOP, state.ball.y <= GameFacts.lowestY);
+    const top = valueOnCondition(Directions.UP, state.ball.y <= GameFacts.lowestY);
 
-    const bottom = valueOnCondition(Directions.BOTTOM, (
+    const bottom = valueOnCondition(Directions.DOWN, (
         state.ball.y + GameFacts.ballHeight >= GameFacts.highestY
     ));
 
