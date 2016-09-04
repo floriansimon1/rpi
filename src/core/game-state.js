@@ -105,8 +105,8 @@ GameState.next = (gameState, previousGameState, controllers) => {
                 * we don't alter the coordinates of the reinit'd
                 * ball.
                 */
-                collision.vertical.map(side => {
-                    gameState.ball = gameState.ball.set('angle', gameState.ball.oppositeAngle);
+                collision.vertical.map(() => {
+                    gameState.ball = gameState.ball.set('angle', gameState.ball.oppositeAngle());
                 });
 
                 collision.horizontal.map(side => {
