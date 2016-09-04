@@ -31,9 +31,9 @@ let GameFacts = {
     /*********************/
     /* VELOCITIES (px/s) */
     /*********************/
-    racketSpeed:          6,
     maxBallSpeed:         8,
     initialBallSpeed:     4,
+    racketSpeed:          16,
     bounceSpeedIncrement: 0.2,
 
     /************/
@@ -75,7 +75,7 @@ GameFacts.yCenter                = GameFacts.height / 2;
 GameFacts.rightMiddleLineX       = GameFacts.width / 2;
 GameFacts.xCenter                = GameFacts.width / 2;
 
-GameFacts.racketMaxPosition = GameFacts.highestY - GameFacts.racketHeight;
+GameFacts.racketMaxPosition = GameFacts.highestY - GameFacts.racketHeight + 1;
 GameFacts.rightRacketX      = GameFacts.highestX - 1
 GameFacts.leftRacketX       = GameFacts.lowestX + 1;
 
