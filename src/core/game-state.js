@@ -12,7 +12,11 @@ const methodify        = require("../utils/methodify");
 const valueOnCondition = require("../utils/value-on-condition");
 
 // In nanoseconds.
-const getElapsedTime = () => process.hrtime()[1];
+const getElapsedTimeSince = point => {
+    const [s, ns] = process.hrtime(point);
+
+    return s + ns * Math.pow(10, -9);
+};
 
 let GameState = Immutable.Record({
     /*
@@ -24,8 +28,8 @@ let GameState = Immutable.Record({
     players: null,
     ball:    new Ball(),
 
-    // In process.hrtime() format.
-    currentTime: getElapsedTime(),
+    // See NodeJS' doc for process.hrtime for info about the type of this.
+    currentTime: process.hrtime(),
 
     // Player index of the winner, if any.
     victoryDetails: Maybe.Nothing()
@@ -33,11 +37,9 @@ let GameState = Immutable.Record({
 
 // Returns a new instance of an initial game state.
 GameState.initial = () => new GameState({
-    players: new Immutable.List([new Player(), new Player()]),
-    ball:    Ball.initial(),
-
-    // In nanoseconds.
-    currentTime: getElapsedTime(),
+    players:     new Immutable.List([new Player(), new Player()]),
+    currentTime: process.hrtime(),
+    ball:        Ball.initial()
 });
 
 // "playerIndex" is the player index in the players array.
@@ -72,13 +74,11 @@ GameState.next = (gameState, previousGameState, controllers) => {
 
     // Moves players and the ball.
     return gameState.withMutations(gameState => {
-        const oldTime = gameState.currentTime;
-        const newTime = getElapsedTime();
+        // Approximate time elapsed since last frame.
+        const Δs = getElapsedTimeSince(gameState.currentTime);
 
-        gameState.currentTime = newTime;
-
-        // Time elapsed since last frame.
-        const Δs = (newTime - oldTime) / Math.pow(10, 9);
+        // Relative to fixed arbitrary time point for the whole program.
+        gameState.currentTime = process.hrtime();
 
         // Ball movement.
         gameState.ball = gameState.ball.move(Δs);
