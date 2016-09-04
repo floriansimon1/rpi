@@ -13,7 +13,7 @@ const Collision = Immutable.Record({
     // Directions.LEFT or Directions.RIGHT.
     horizontal: Maybe.Nothing(),
 
-    // Directions.TOP or Directions.BOTTOM.
+    // Directions.UP or Directions.DOWN.
     vertical: Maybe.Nothing(),
 
     // Player index.

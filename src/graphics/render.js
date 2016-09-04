@@ -100,12 +100,12 @@ module.exports = matrix => {
 
         // Center circle
         [Directions.LEFT, Directions.RIGHT].forEach(horizontal => (
-            [Directions.TOP, Directions.BOTTOM].forEach(vertical => {
+            [Directions.UP, Directions.DOWN].forEach(vertical => {
                 const centerX = GameFacts.xCenter - (horizontal === Directions.LEFT ? 1  : 0);
-                const centerY = GameFacts.yCenter - (vertical === Directions.TOP ? 1 : 0);
+                const centerY = GameFacts.yCenter - (vertical === Directions.UP ? 1 : 0);
 
                 const xMultiplier = horizontal === Directions.LEFT ? -1 : 1;
-                const yMultiplier = vertical === Directions.TOP ? -1 : 1;
+                const yMultiplier = vertical === Directions.UP ? -1 : 1;
 
                 _.range(GameFacts.middleCircleRadius).forEach(circleX => (
                     _.range(GameFacts.middleCircleRadius).forEach(circleY => {
