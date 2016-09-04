@@ -25,16 +25,16 @@ let GameFacts = {
 
     playerCollisionZoneWidth: 3,
 
-    minAngle: 0.15 * Math.PI * 2,
-    maxAngle: 0.85 * Math.PI * 2,
+    minAngle: 0.15 * Math.PI,
+    maxAngle: 0.85 * Math.PI,
 
     /*********************/
     /* VELOCITIES (px/s) */
     /*********************/
-    maxBallSpeed:         8,
-    initialBallSpeed:     4,
+    maxBallSpeed:         48,
+    initialBallSpeed:     24,
     racketSpeed:          16,
-    bounceSpeedIncrement: 0.2,
+    bounceSpeedIncrement: 2,
 
     /************/
     /* GRAPHICS */

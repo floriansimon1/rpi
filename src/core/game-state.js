@@ -26,7 +26,7 @@ let GameState = Immutable.Record({
     * the controllers' intentionally.
     */
     players: null,
-    ball:    new Ball(),
+    ball:    Ball.initial(),
 
     // See NodeJS' doc for process.hrtime for info about the type of this.
     currentTime: process.hrtime(),
@@ -150,7 +150,7 @@ GameState.next = (gameState, previousGameState, controllers) => {
                         gameState.ball = gameState.ball.set("angle", clamp(
                             GameFacts.minAngle,
                             GameFacts.maxAngle,
-                            racketPercent * Math.PI * 2
+                            racketPercent * Math.PI
                         ));
                     });
                 });

@@ -45,29 +45,39 @@ Collisions.detectBallCollisions = (state, oldState) => {
         )
     };
 
-    const top = valueOnCondition(Directions.UP, state.ball.y <= GameFacts.lowestY);
+    const top = valueOnCondition(Directions.UP, (
+        state.ball.y <= GameFacts.lowestY
+        && state.ball.angle < Math.PI / 2
+    ));
 
     const bottom = valueOnCondition(Directions.DOWN, (
         state.ball.y + GameFacts.ballHeight >= GameFacts.highestY
+        && state.ball.angle > Math.PI / 2
     ));
 
     const vertical = top.orElse(() => bottom);
 
-    const left = valueOnCondition(Directions.LEFT, state.ball.x <= GameFacts.lowestX);
+    const left = valueOnCondition(Directions.LEFT, (
+        state.ball.x <= GameFacts.lowestX
+        && state.ball.xDirection === -1
+    ));
 
     const right = valueOnCondition(Directions.RIGHT, (
         state.ball.x + GameFacts.ballWidth >= GameFacts.highestX
+        && state.ball.xDirection === 1
     ));
 
     const horizontal = left.orElse(() => right);
 
     const leftPlayer = valueOnCondition(_, (
         state.ball.x <= GameFacts.lowestX + (GameFacts.playerCollisionZoneWidth - 1)
+        && state.ball.xDirection === -1
     ))
     .chain(() => valueOnCondition(0, ballYOnYRacketLine(0)));
 
     const rightPlayer = valueOnCondition(_, (
         state.ball.x >= GameFacts.highestX - (GameFacts.playerCollisionZoneWidth - 1)
+        && state.ball.xDirection === 1
     ))
     .chain(() => valueOnCondition(1, ballYOnYRacketLine(1)))
 

@@ -39,6 +39,11 @@ module.exports = matrix => {
     const gameScreen = gameState => {
         drawField();
 
+        drawPlayer(Directions.RIGHT, GameFacts.player2Color, gameState.players.get(1).y);
+        drawPlayer(Directions.LEFT, GameFacts.player1Color, gameState.players.get(0).y);
+
+        drawBall(GameFacts.ballColor, Math.round(gameState.ball.x), Math.round(gameState.ball.y));
+
         drawScore(
             Directions.RIGHT,
             GameFacts.player2Color,
@@ -52,11 +57,6 @@ module.exports = matrix => {
             gameState.players.get(0).score,
             GameFacts.gameScoreY
         );
-
-        drawPlayer(Directions.RIGHT, GameFacts.player2Color, gameState.players.get(1).y);
-        drawPlayer(Directions.LEFT, GameFacts.player1Color, gameState.players.get(0).y);
-
-        drawBall(GameFacts.ballColor, Math.round(gameState.ball.x), Math.round(gameState.ball.y));
     };
 
     const drawSymbol = (symbol, xOffset, yOffset, optionalColor) => {
