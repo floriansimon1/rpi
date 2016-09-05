@@ -11,13 +11,8 @@ const Immutable  = require("immutable");
 const randomAngle = () => Math.random() * Math.PI;
 
 let Ball = Immutable.Record({
-    // One of 1 or -1.
-    xDirection: 1,
-
-    // In pixels/s.
+    // In pixels/s and radians. Think of those as polar coordinates.
     speed: GameFacts.initialBallSpeed,
-
-    // In radians
     angle: Math.PI / 2,
 
     x: GameFacts.ballCenterX,
@@ -25,25 +20,17 @@ let Ball = Immutable.Record({
 });
 
 Ball.initial = values => new Ball(Object.assign({
-    angle:      callUntil(randomAngle, between(GameFacts.minAngle, GameFacts.maxAngle)),
-    xDirection: randomSign()
+    angle: (
+        callUntil(randomAngle, between(GameFacts.minAngle, GameFacts.maxAngle))
+        + (Math.random() > 0.5 ? Math.PI : 0)
+    )
 }, values || {}));
 
 Ball.move = (ball, Δs) => {
     const travelled  = Δs * ball.speed;
-    const yDirection = ball.angle > Math.PI / 2 ? 1 : -1;
 
-    const Δy = yDirection * (
-        ball.angle !== Math.PI / 2
-        ? Math.cos(ball.angle < Math.PI / 2 ? ball.angle : Math.PI - ball.angle) * travelled
-        : 0
-    );
-
-    const Δx = ball.xDirection * (
-        ball.angle !== Math.PI / 2
-        ? Math.sin(ball.angle < Math.PI / 2 ? ball.angle : Math.PI - ball.angle) * travelled
-        : travelled
-    );
+    const Δx = travelled * Math.cos(ball.angle);
+    const Δy = travelled * Math.sin(ball.angle);
 
     return ball
     .set("x", clamp(
@@ -58,9 +45,14 @@ Ball.move = (ball, Δs) => {
     ));
 };
 
-Ball.oppositeXDirection = ball => ball.xDirection * -1;
-Ball.oppositeAngle      = ball => Math.PI - ball.angle;
+Ball.bounce = ball => (
+    ball.angle % Math.PI > Math.PI / 2
+    ? ball.angle - Math.PI / 2
+    : ball.angle + Math.PI / 2
+) % (2 * Math.PI);
 
-methodify(Ball, ["move", "oppositeXDirection", "oppositeAngle"]);
+Ball.oppositeAngle = ball => ball.angle + Math.PI % (Math.PI / 2);
+
+methodify(Ball, ["move", "bounce", "oppositeAngle"]);
 
 module.exports = Ball;

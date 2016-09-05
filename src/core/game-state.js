@@ -106,14 +106,12 @@ GameState.next = (gameState, previousGameState, controllers) => {
                 * ball.
                 */
                 collision.vertical.map(() => {
-                    gameState.ball = gameState.ball.set('angle', gameState.ball.oppositeAngle());
+                    gameState.ball = gameState.ball.set("angle", gameState.ball.bounce());
                 });
 
                 collision.horizontal.map(side => {
                     if (collision.player.isNothing) {
-                        gameState.ball = Ball.initial({
-                            xDirection: gameState.ball.oppositeXDirection()
-                        });
+                        gameState.ball = Ball.initial();
 
                         incrementScore(gameState, side === Directions.LEFT ? 1 : 0);
                     }
@@ -131,8 +129,8 @@ GameState.next = (gameState, previousGameState, controllers) => {
                     collision
                     .vertical
                     .map(() => {
-                        gameState.ball = gameState.ball.set("xDirection", (
-                            gameState.ball.oppositeXDirection()
+                        gameState.ball = gameState.ball.set("angle", (
+                            gameState.ball.oppositeAngle()
                         ));
                     })
 
@@ -147,10 +145,20 @@ GameState.next = (gameState, previousGameState, controllers) => {
                             (racketLine.hi - racketLine.lo)
                         );
 
-                        gameState.ball = gameState.ball.set("angle", clamp(
+                        const undirectedAngle = clamp(
                             GameFacts.minAngle,
                             GameFacts.maxAngle,
                             racketPercent * Math.PI
+                        );
+
+                        const xDirectionSupplement = (
+                            gameState.ball.angle > Math.PI
+                            ? Math.PI
+                            : 0
+                        );
+
+                        gameState.ball = gameState.ball.set("angle", (
+                            xDirectionSupplement + undirectedAngle
                         ));
                     });
                 });
