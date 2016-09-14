@@ -31,7 +31,7 @@ var exit = () => {
 
 // Whenever a player presses the SELECT button, we exit the program.
 controllers.forEach(controller => {
-    controller.on("keydown", (__, key) => {
+    controller.on("keydown", key => {
         if (key === "SELECT") {
             exit();
         }

@@ -42,7 +42,7 @@ module.exports = matrix => {
         drawPlayer(Directions.RIGHT, GameFacts.player2Color, gameState.players.get(1).y);
         drawPlayer(Directions.LEFT, GameFacts.player1Color, gameState.players.get(0).y);
 
-        drawBall(GameFacts.ballColor, Math.round(gameState.ball.x), Math.round(gameState.ball.y));
+        drawBall(gameState.ball.color, Math.round(gameState.ball.x), Math.round(gameState.ball.y));
 
         drawScore(
             Directions.RIGHT,

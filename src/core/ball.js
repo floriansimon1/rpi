@@ -11,6 +11,8 @@ const Immutable  = require("immutable");
 const randomAngle = () => Math.random() * Math.PI;
 
 let Ball = Immutable.Record({
+    color: GameFacts.ballInitialColor,
+
     // In pixels/s and radians. Think of those as polar coordinates.
     speed: GameFacts.initialBallSpeed,
     angle: Math.PI / 2,
@@ -22,6 +24,7 @@ let Ball = Immutable.Record({
 Ball.initial = values => new Ball(Object.assign({
     angle: (
         callUntil(randomAngle, between(GameFacts.minAngle, GameFacts.maxAngle))
+        + Math.PI / 2
         + (Math.random() > 0.5 ? Math.PI : 0)
     )
 }, values || {}));
@@ -30,7 +33,9 @@ Ball.move = (ball, Δs) => {
     const travelled  = Δs * ball.speed;
 
     const Δx = travelled * Math.cos(ball.angle);
-    const Δy = travelled * Math.sin(ball.angle);
+
+    // Y coordinates are reversed because y0 is at the top of the screen.
+    const Δy = travelled * Math.sin(ball.angle) * -1;
 
     return ball
     .set("x", clamp(
@@ -45,14 +50,39 @@ Ball.move = (ball, Δs) => {
     ));
 };
 
-Ball.bounce = ball => (
-    ball.angle % Math.PI > Math.PI / 2
-    ? ball.angle - Math.PI / 2
-    : ball.angle + Math.PI / 2
-) % (2 * Math.PI);
+Ball.goingLeft  = ball => between(Math.PI / 2, 3 * Math.PI / 2, ball.angle % (2 * Math.PI));
+Ball.goingRight = ball => (ball.angle + Math.PI / 2) % (2 * Math.PI) < Math.PI;
 
-Ball.oppositeAngle = ball => ball.angle + Math.PI % (Math.PI / 2);
+// Y coordinates are reversed because y0 is at the top of the screen.
+Ball.goingDown = ball => ball.angle % (2 * Math.PI) > Math.PI;
+Ball.goingUp   = ball => ball.angle % (2 * Math.PI) < Math.PI;
 
-methodify(Ball, ["move", "bounce", "oppositeAngle"]);
+Ball.bounceVertically = ball => ball.set("angle", (
+    ball.angle
+    + 3 * Math.PI
+    - 2 * (ball.angle % Math.PI - Math.PI / 2)
+) % (2 * Math.PI));
+
+Ball.bounceHorizontally = ball => ball.set("angle", (
+    ball.angle
+    + 3 * Math.PI
+    - 2 * ((ball.angle - Math.PI / 2) % Math.PI - Math.PI / 2)
+) % (2 * Math.PI));
+
+Ball.oppositeDirection = ball => ball.set("angle", ball.angle + Math.PI % (Math.PI / 2));
+
+Ball.accelerate = ball => (
+    ball
+    .set("speed", clamp(0, GameFacts.maxBallSpeed, ball.speed + GameFacts.bounceSpeedIncrement))
+    .set("color", Object.assign({}, ball.color, {
+        g: clamp(0, 255, ball.color.g - GameFacts.ballColorGreenDecrease)
+    }))
+);
+
+methodify(Ball, [
+    "bounceHorizontally", "move", "bounceVertically",
+    "oppositeDirection", "goingLeft", "goingRight",
+    "goingUp", "goingDown", "accelerate"
+]);
 
 module.exports = Ball;

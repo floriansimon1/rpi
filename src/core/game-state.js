@@ -7,7 +7,8 @@ const Immutable        = require("immutable");
 const Maybe            = require("data.maybe");
 const Collisions       = require("./collisions");
 const Directions       = require("./directions");
-const clamp            = require("../utils/clamp");
+const GameFacts        = require("./game-facts");
+const between          = require("../utils/between");
 const methodify        = require("../utils/methodify");
 const valueOnCondition = require("../utils/value-on-condition");
 
@@ -66,7 +67,7 @@ GameState.next = (gameState, previousGameState, controllers) => {
     // Waits for a START button press to start a new game.
     if (gameState.victoryDetails.isJust) {
         if (controllers.find(controller => controller.keysPressed.START)) {
-            return gameState.initial();
+            return GameState.initial();
         } else {
             return gameState;
         }
@@ -106,7 +107,7 @@ GameState.next = (gameState, previousGameState, controllers) => {
                 * ball.
                 */
                 collision.vertical.map(() => {
-                    gameState.ball = gameState.ball.set("angle", gameState.ball.bounce());
+                    gameState.ball = gameState.ball.bounceVertically();
                 });
 
                 collision.horizontal.map(side => {
@@ -119,47 +120,18 @@ GameState.next = (gameState, previousGameState, controllers) => {
 
                 collision.player.map(playerIndex => {
                     // Increases the ball speed.
-                    gameState.ball = gameState.ball.set("speed", clamp(
-                        0,
-                        GameFacts.maxBallSpeed,
-                        gameState.ball.speed + GameFacts.bounceSpeedIncrement
-                    ));
+                    gameState.ball = gameState.ball.accelerate();
 
                     // Goes back where it came from.
                     collision
                     .vertical
                     .map(() => {
-                        gameState.ball = gameState.ball.set("angle", (
-                            gameState.ball.oppositeAngle()
-                        ));
+                        gameState.ball = gameState.ball.oppositeDirection();
                     })
 
                     // Mirror bounce.
                     .orElse(() => {
-                        const racketLine = Collisions.yRacketLine(
-                            gameState, previousGameState, playerIndex
-                        );
-
-                        const racketPercent = (
-                            (ball.y - racketLine.lo) /
-                            (racketLine.hi - racketLine.lo)
-                        );
-
-                        const undirectedAngle = clamp(
-                            GameFacts.minAngle,
-                            GameFacts.maxAngle,
-                            racketPercent * Math.PI
-                        );
-
-                        const xDirectionSupplement = (
-                            gameState.ball.angle > Math.PI
-                            ? Math.PI
-                            : 0
-                        );
-
-                        gameState.ball = gameState.ball.set("angle", (
-                            xDirectionSupplement + undirectedAngle
-                        ));
+                        gameState.ball = gameState.ball.bounceHorizontally();
                     });
                 });
             });

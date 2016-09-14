@@ -32,6 +32,12 @@ const keys = {
 
 const keyNames = Object.keys(keys);
 
+let ControllerPrototype = Object.create(EventEmitter.prototype);
+
+ControllerPrototype.close = function () {
+    this.private.device.close();
+};
+
 /*
 * Path is retrieved by calling Controller.list().
 *
@@ -40,7 +46,7 @@ const keyNames = Object.keys(keys);
 * can be called as a factory.
 */
 let Controller = function (path) {
-    let self = Object.create(EventEmitter.prototype);
+    let self = Object.create(ControllerPrototype);
 
     self.private = {};
 
@@ -91,10 +97,6 @@ Controller.list = () => (
     .filter(device => device.vendorId === 121 && device.productId === 17)
     .map(device => device.path)
 );
-
-Controller.prototype.close = function () {
-    this.private.device.close();
-};
 
 Controller.close = controller => {
     controller.close();

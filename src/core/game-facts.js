@@ -14,7 +14,7 @@ let GameFacts = {
 
     ballWidth:          2,
     ballHeight:         2,
-    racketHeight:       6,
+    racketHeight:       8,
     middleCircleRadius: 5,
 
     leftScoreXCenterDistance: -10,
@@ -31,18 +31,18 @@ let GameFacts = {
     /*********************/
     /* VELOCITIES (px/s) */
     /*********************/
-    maxBallSpeed:         48,
-    initialBallSpeed:     24,
-    racketSpeed:          16,
-    bounceSpeedIncrement: 2,
+    maxBallSpeed:         256,
+    initialBallSpeed:     64,
+    racketSpeed:          64,
+    bounceSpeedIncrement: 12,
 
     /************/
     /* GRAPHICS */
     /************/
-    fieldColor:   { r: 255, g: 255, b: 255 },
-    player1Color: { r: 0,   g: 0,   b: 255 },
-    ballColor:    { r: 255, g: 255, b: 0 },
-    player2Color: { r: 255, g: 0,   b: 0 },
+    fieldColor:       { r: 255, g: 255, b: 255 },
+    player1Color:     { r: 0,   g: 0,   b: 255 },
+    ballInitialColor: { r: 255, g: 255, b: 0 },
+    player2Color:     { r: 255, g: 0,   b: 0 },
 
     colorsByLetter: {
         X: { r: 255, g: 150, b: 150 },
@@ -53,7 +53,7 @@ let GameFacts = {
     /***********/
     /* PROGRAM */
     /***********/
-    pauseInterval: 10,
+    pauseInterval: 5,
 
     /**************/
     /* RGB panels */
@@ -62,9 +62,9 @@ let GameFacts = {
     nbPanels:         2
 };
 
-/*************************/
-/* CALCULATED DIMENSIONS */
-/*************************/
+/************************/
+/* CALCULATED CONSTANTS */
+/************************/
 GameFacts.centeredRacketPosition = (GameFacts.height - GameFacts.racketHeight) / 2;
 GameFacts.ballCenterY            = (GameFacts.height - GameFacts.ballHeight) / 2;
 GameFacts.ballCenterX            = (GameFacts.width - GameFacts.ballWidth) / 2;
@@ -78,5 +78,11 @@ GameFacts.xCenter                = GameFacts.width / 2;
 GameFacts.racketMaxPosition = GameFacts.highestY - GameFacts.racketHeight + 1;
 GameFacts.rightRacketX      = GameFacts.highestX - 1
 GameFacts.leftRacketX       = GameFacts.lowestX + 1;
+
+GameFacts.ballColorGreenDecrease = Math.round(
+    GameFacts.ballInitialColor.g
+    * GameFacts.bounceSpeedIncrement
+    / (GameFacts.maxBallSpeed - GameFacts.initialBallSpeed)
+);
 
 module.exports = GameFacts;

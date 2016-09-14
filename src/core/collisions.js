@@ -26,8 +26,8 @@ Collisions.yRacketLine = _.curry((state, oldState, playerIndex) => ({
     lo: Math.min(state.players.get(playerIndex).y, oldState.players.get(playerIndex).y),
 
     hi: Math.max(
-        state.players.get(playerIndex).y + GameFacts.rackeHeight,
-        oldState.players.get(playerIndex).y + GameFacts.rackeHeight
+        state.players.get(playerIndex).y + GameFacts.racketHeight,
+        oldState.players.get(playerIndex).y + GameFacts.racketHeight
     )
 }));
 
@@ -39,7 +39,7 @@ Collisions.detectBallCollisions = (state, oldState) => {
         const racketLine = makeRacketLine(playerIndex);
 
         return between(
-            racketLine.lo,
+            racketLine.lo - GameFacts.ballHeight,
             racketLine.hi,
             clamp(GameFacts.lowestY, GameFacts.racketMaxPosiion, state.ball.y)
         )
@@ -47,37 +47,37 @@ Collisions.detectBallCollisions = (state, oldState) => {
 
     const top = valueOnCondition(Directions.UP, (
         state.ball.y <= GameFacts.lowestY
-        && state.ball.angle < Math.PI / 2
+        && state.ball.goingUp()
     ));
 
     const bottom = valueOnCondition(Directions.DOWN, (
         state.ball.y + GameFacts.ballHeight >= GameFacts.highestY
-        && state.ball.angle > Math.PI / 2
+        && state.ball.goingDown()
     ));
 
     const vertical = top.orElse(() => bottom);
 
     const left = valueOnCondition(Directions.LEFT, (
         state.ball.x <= GameFacts.lowestX
-        && state.ball.xDirection === -1
+        && state.ball.goingLeft()
     ));
 
     const right = valueOnCondition(Directions.RIGHT, (
         state.ball.x + GameFacts.ballWidth >= GameFacts.highestX
-        && state.ball.xDirection === 1
+        && state.ball.goingRight()
     ));
 
     const horizontal = left.orElse(() => right);
 
     const leftPlayer = valueOnCondition(_, (
         state.ball.x <= GameFacts.lowestX + (GameFacts.playerCollisionZoneWidth - 1)
-        && state.ball.xDirection === -1
+        && state.ball.goingLeft()
     ))
     .chain(() => valueOnCondition(0, ballYOnYRacketLine(0)));
 
     const rightPlayer = valueOnCondition(_, (
         state.ball.x >= GameFacts.highestX - (GameFacts.playerCollisionZoneWidth - 1)
-        && state.ball.xDirection === 1
+        && state.ball.goingRight()
     ))
     .chain(() => valueOnCondition(1, ballYOnYRacketLine(1)))
 
