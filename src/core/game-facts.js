@@ -43,6 +43,7 @@ let GameFacts = {
     fieldColor:           { r: 255, g: 255, b: 255 },
     player1Color:         { r: 0,   g: 0,   b: 255 },
     player2Color:         { r: 255, g: 0,   b: 0   },
+    ballTrailColor:       { r: 200, g: 100, b: 0   },
     ballInitialColor:     { r: 255, g: 255, b: 0   },
     pauseRectanglesColor: { r: 255, g: 165, b: 0   },
 

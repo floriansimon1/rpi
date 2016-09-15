@@ -46,6 +46,13 @@ module.exports = matrix => {
         drawPlayer(Directions.RIGHT, GameFacts.player2Color, gameState.players.get(1).y);
         drawPlayer(Directions.LEFT, GameFacts.player1Color, gameState.players.get(0).y);
 
+        // Previous position trail.
+        drawBall(
+            GameFacts.ballTrailColor,
+            Math.round(gameState.ball.previousDifferentPosition.x),
+            Math.round(gameState.ball.previousDifferentPosition.y)
+        );
+
         drawBall(gameState.ball.color, Math.round(gameState.ball.x), Math.round(gameState.ball.y));
 
         drawScore(
@@ -174,12 +181,12 @@ module.exports = matrix => {
                 );
 
                 matrix.setPixel(
-                        x + GameFacts.rightPauseRectanglesStartX,
-                        y + GameFacts.pauseRectangleStartY,
-                        GameFacts.pauseRectanglesColor.r,
-                        GameFacts.pauseRectanglesColor.g,
-                        GameFacts.pauseRectanglesColor.b
-                    );
+                    x + GameFacts.rightPauseRectanglesStartX,
+                    y + GameFacts.pauseRectangleStartY,
+                    GameFacts.pauseRectanglesColor.r,
+                    GameFacts.pauseRectanglesColor.g,
+                    GameFacts.pauseRectanglesColor.b
+                );
             });
         })
     };
@@ -189,7 +196,13 @@ module.exports = matrix => {
 
         matrix.clear();
 
-        if (gameState.pauseState.getOrElse(pauseEnded) !== pauseEnded) {
+        if (
+            gameState.pauseState.getOrElse(pauseEnded) !== pauseEnded
+            && (
+                gameState.ball.x !== GameFacts.ballCenterX
+                || gameState.ball.y !== GameFacts.ballCenterY
+            )
+        ) {
             drawPauseRectangles();
         }
 

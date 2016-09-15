@@ -43,7 +43,7 @@ controllers.forEach(controller => {
 * and updates the game state regularly.
 */
 const mainLoop = (gameState, previousGameState) => {
-    render(gameState);
+    render(gameState, previousGameState);
 
     setTimeout(
         () => mainLoop(gameState.next(previousGameState, controllers), Maybe.of(gameState)),

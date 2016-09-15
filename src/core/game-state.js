@@ -25,7 +25,7 @@ const getElapsedTimeSince = point => {
 };
 
 let GameState = Immutable.Record({
-    pauseState: Maybe.Nothing(),
+    pauseState: Maybe.Just(startReleased),
 
     pauseStates: { pauseEnded, holdingStart, startReleased },
 
@@ -78,7 +78,7 @@ GameState.next = (gameState, previousGameState, controllers) => {
     // Waits for a START button press to start a new game.
     if (gameState.victoryDetails.isJust) {
         if (startPressed) {
-            return GameState.initial();
+            return GameState.initial().set("pauseState", Maybe.Just(holdingStart));
         } else {
             return gameState;
         }
@@ -110,8 +110,20 @@ GameState.next = (gameState, previousGameState, controllers) => {
             gameState.pauseState = Maybe.Nothing();
         }
 
+        const oldPosition = {
+            x: Math.round(gameState.ball.x),
+            y: Math.round(gameState.ball.y)
+        };
+
         // Ball movement.
         gameState.ball = gameState.ball.move(Δs);
+
+        if (
+            Math.round(gameState.ball.x) !== oldPosition.x
+            || Math.round(gameState.ball.y) !== oldPosition.y
+        ) {
+            gameState.ball = gameState.ball.set("previousDifferentPosition", oldPosition);
+        }
 
         // Player movement.
         gameState.players = new Immutable.List(

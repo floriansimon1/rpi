@@ -27,6 +27,11 @@ const randomAngle = () => {
 let Ball = Immutable.Record({
     color: GameFacts.ballInitialColor,
 
+    previousDifferentPosition: {
+        x: GameFacts.ballCenterX,
+        y: GameFacts.ballCenterY
+    },
+
     // In pixels/s and radians. Think of those as polar coordinates.
     speed: GameFacts.initialBallSpeed,
     angle: Math.PI / 2,
