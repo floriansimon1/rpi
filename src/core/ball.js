@@ -8,7 +8,21 @@ const clamp      = require("../utils/clamp");
 const GameFacts  = require("./game-facts");
 const Immutable  = require("immutable");
 
-const randomAngle = () => Math.random() * Math.PI;
+const randomAngle = () => {
+    let nbQuarters = 1;
+
+    let randomQuartersSeed = Math.random();
+
+    if (randomQuartersSeed > 0.66) {
+        nbQuarters = 3;
+    } else if (randomQuartersSeed > 0.33) {
+        nbQuarters = 2;
+    }
+
+    const quarterPosition = callUntil(Math.random, between(0.5, 0.8)) * Math.PI / 2;
+
+    return nbQuarters * Math.PI / 2 + quarterPosition;
+};
 
 let Ball = Immutable.Record({
     color: GameFacts.ballInitialColor,
@@ -22,11 +36,7 @@ let Ball = Immutable.Record({
 });
 
 Ball.initial = values => new Ball(Object.assign({
-    angle: (
-        callUntil(randomAngle, between(GameFacts.minAngle, GameFacts.maxAngle))
-        + Math.PI / 2
-        + (Math.random() > 0.5 ? Math.PI : 0)
-    )
+    angle: randomAngle()
 }, values || {}));
 
 Ball.move = (ball, Δs) => {

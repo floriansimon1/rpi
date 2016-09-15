@@ -14,8 +14,8 @@ let GameFacts = {
 
     ballWidth:          2,
     ballHeight:         2,
-    racketHeight:       8,
     middleCircleRadius: 5,
+    racketHeight:       10,
 
     leftScoreXCenterDistance: -10,
     rightScoreXCenterDistance: 7,
@@ -25,16 +25,13 @@ let GameFacts = {
 
     playerCollisionZoneWidth: 3,
 
-    minAngle: 0.15 * Math.PI,
-    maxAngle: 0.85 * Math.PI,
-
     /*********************/
     /* VELOCITIES (px/s) */
     /*********************/
-    maxBallSpeed:         256,
-    initialBallSpeed:     64,
-    racketSpeed:          64,
-    bounceSpeedIncrement: 12,
+    maxBallSpeed:         250,
+    initialBallSpeed:     50,
+    racketSpeed:          72,
+    bounceSpeedIncrement: 10,
 
     /************/
     /* GRAPHICS */

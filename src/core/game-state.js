@@ -8,6 +8,7 @@ const Maybe            = require("data.maybe");
 const Collisions       = require("./collisions");
 const Directions       = require("./directions");
 const GameFacts        = require("./game-facts");
+const clamp            = require("../utils/clamp");
 const between          = require("../utils/between");
 const methodify        = require("../utils/methodify");
 const valueOnCondition = require("../utils/value-on-condition");
@@ -131,7 +132,62 @@ GameState.next = (gameState, previousGameState, controllers) => {
 
                     // Mirror bounce.
                     .orElse(() => {
+                        // Base bounce in any case.
                         gameState.ball = gameState.ball.bounceHorizontally();
+
+                        // If the player moves while hitting the ball, we bounce in a special way.
+                        if (
+                            previousGameState.players.get(playerIndex).y
+                            !== gameState.players.get(playerIndex).y
+                        ) {
+                            const racketMovedUp = (
+                                previousGameState.players.get(playerIndex).y
+                                > gameState.players.get(playerIndex).y
+                            );
+
+                            let baseAngle         = 0;
+                            let amplitudeReversed = racketMovedUp;
+
+                            if (racketMovedUp) {
+                                if (gameState.ball.goingLeft()) {
+                                    baseAngle = Math.PI / 2;
+                                }
+                            } else if (gameState.ball.goingLeft()) {
+                                baseAngle = Math.PI;
+                            } else {
+                                baseAngle = 3 * Math.PI / 2;
+                            }
+
+                            const racketLine = Collisions.yRacketLine(
+                                gameState, previousGameState, playerIndex
+                            );
+
+                            const rawRacketPercent = (
+                                (gameState.ball.y - racketLine.lo) /
+                                (racketLine.hi - racketLine.lo)
+                            );
+
+                            const racketPercent = clamp(
+                                0.5,
+                                1, (
+                                    racketMovedUp
+                                    ? 1 - rawRacketPercent
+                                    : rawRacketPercent
+                                )
+                            );
+
+                            const rawControlAmplitude = clamp(0.25, 0.75, 2 * (racketPercent - 0.5));
+
+                            const controlAmplitude = (
+                                amplitudeReversed
+                                ? 1 - rawControlAmplitude
+                                : rawControlAmplitude
+                            );
+
+                            gameState.ball = gameState.ball.set("angle", (
+                                2 * Math.PI + baseAngle + controlAmplitude * Math.PI / 2
+                            ) % (Math.PI * 2));
+                        }
                     });
                 });
             });
