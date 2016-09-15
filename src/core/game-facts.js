@@ -25,6 +25,10 @@ let GameFacts = {
 
     playerCollisionZoneWidth: 3,
 
+    pauseRectanglesHeight:  12,
+    pauseRectanglesWidth:   4,
+    pauseRectanglesPadding: 4,
+
     /*********************/
     /* VELOCITIES (px/s) */
     /*********************/
@@ -36,10 +40,11 @@ let GameFacts = {
     /************/
     /* GRAPHICS */
     /************/
-    fieldColor:       { r: 255, g: 255, b: 255 },
-    player1Color:     { r: 0,   g: 0,   b: 255 },
-    ballInitialColor: { r: 255, g: 255, b: 0 },
-    player2Color:     { r: 255, g: 0,   b: 0 },
+    fieldColor:           { r: 255, g: 255, b: 255 },
+    player1Color:         { r: 0,   g: 0,   b: 255 },
+    player2Color:         { r: 255, g: 0,   b: 0   },
+    ballInitialColor:     { r: 255, g: 255, b: 0   },
+    pauseRectanglesColor: { r: 255, g: 165, b: 0   },
 
     colorsByLetter: {
         X: { r: 255, g: 150, b: 150 },
@@ -50,7 +55,7 @@ let GameFacts = {
     /***********/
     /* PROGRAM */
     /***********/
-    pauseInterval: 5,
+    pauseInterval: 12,
 
     /**************/
     /* RGB panels */
@@ -62,15 +67,18 @@ let GameFacts = {
 /************************/
 /* CALCULATED CONSTANTS */
 /************************/
-GameFacts.centeredRacketPosition = (GameFacts.height - GameFacts.racketHeight) / 2;
-GameFacts.ballCenterY            = (GameFacts.height - GameFacts.ballHeight) / 2;
-GameFacts.ballCenterX            = (GameFacts.width - GameFacts.ballWidth) / 2;
-GameFacts.highestY               = GameFacts.height - GameFacts.lowestY - 1;
-GameFacts.highestX               = GameFacts.width - GameFacts.lowestX - 1;
-GameFacts.leftMiddleLineX        = GameFacts.width / 2 - 1;
-GameFacts.yCenter                = GameFacts.height / 2;
-GameFacts.rightMiddleLineX       = GameFacts.width / 2;
-GameFacts.xCenter                = GameFacts.width / 2;
+GameFacts.leftPauseRectanglesStartX  = GameFacts.width / 2 - GameFacts.pauseRectanglesWidth - 2;
+GameFacts.rightPauseRectanglesStartX = GameFacts.width / 2 + GameFacts.pauseRectanglesWidth - 2;
+GameFacts.pauseRectangleStartY       = (GameFacts.height - GameFacts.pauseRectanglesHeight) / 2;
+GameFacts.centeredRacketPosition     = (GameFacts.height - GameFacts.racketHeight) / 2;
+GameFacts.ballCenterY                = (GameFacts.height - GameFacts.ballHeight) / 2;
+GameFacts.ballCenterX                = (GameFacts.width - GameFacts.ballWidth) / 2;
+GameFacts.highestY                   = GameFacts.height - GameFacts.lowestY - 1;
+GameFacts.highestX                   = GameFacts.width - GameFacts.lowestX - 1;
+GameFacts.leftMiddleLineX            = GameFacts.width / 2 - 1;
+GameFacts.yCenter                    = GameFacts.height / 2;
+GameFacts.rightMiddleLineX           = GameFacts.width / 2;
+GameFacts.xCenter                    = GameFacts.width / 2;
 
 GameFacts.racketMaxPosition = GameFacts.highestY - GameFacts.racketHeight + 1;
 GameFacts.rightRacketX      = GameFacts.highestX - 1

@@ -13,6 +13,10 @@ const between          = require("../utils/between");
 const methodify        = require("../utils/methodify");
 const valueOnCondition = require("../utils/value-on-condition");
 
+const pauseEnded    = Symbol();
+const holdingStart  = Symbol();
+const startReleased = Symbol();
+
 // In nanoseconds.
 const getElapsedTimeSince = point => {
     const [s, ns] = process.hrtime(point);
@@ -21,6 +25,10 @@ const getElapsedTimeSince = point => {
 };
 
 let GameState = Immutable.Record({
+    pauseState: Maybe.Nothing(),
+
+    pauseStates: { pauseEnded, holdingStart, startReleased },
+
     /*
     * Game models.
     *
@@ -65,9 +73,11 @@ const incrementScore = (gameState, playerIndex) => {
 
 // Computes the new game state.
 GameState.next = (gameState, previousGameState, controllers) => {
+    const startPressed = controllers.find(controller => controller.keysPressed.START);
+
     // Waits for a START button press to start a new game.
     if (gameState.victoryDetails.isJust) {
-        if (controllers.find(controller => controller.keysPressed.START)) {
+        if (startPressed) {
             return GameState.initial();
         } else {
             return gameState;
@@ -81,6 +91,24 @@ GameState.next = (gameState, previousGameState, controllers) => {
 
         // Relative to fixed arbitrary time point for the whole program.
         gameState.currentTime = process.hrtime();
+
+        if (gameState.pauseState.getOrElse(pauseEnded) !== pauseEnded) {
+            if (gameState.pauseState.get() === holdingStart && !startPressed) {
+                gameState.pauseState = Maybe.Just(startReleased);
+            } else if (gameState.pauseState.get() === startReleased && startPressed) {
+                gameState.pauseState = Maybe.Just(pauseEnded);
+            }
+
+            return;
+        } else if (startPressed) {
+            if (gameState.pauseState.isNothing) {
+                gameState.pauseState = Maybe.Just(holdingStart);
+            }
+
+            return;
+        } else {
+            gameState.pauseState = Maybe.Nothing();
+        }
 
         // Ball movement.
         gameState.ball = gameState.ball.move(Δs);

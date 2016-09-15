@@ -37,7 +37,11 @@ module.exports = matrix => {
     };
 
     const gameScreen = gameState => {
-        drawField();
+        const pauseEnded = gameState.pauseStates.pauseEnded;
+
+        if (gameState.pauseState.getOrElse(pauseEnded) === pauseEnded) {
+            drawField();
+        }
 
         drawPlayer(Directions.RIGHT, GameFacts.player2Color, gameState.players.get(1).y);
         drawPlayer(Directions.LEFT, GameFacts.player1Color, gameState.players.get(0).y);
@@ -158,8 +162,36 @@ module.exports = matrix => {
         });
     };
 
+    const drawPauseRectangles = () => {
+        _.range(GameFacts.pauseRectanglesWidth).forEach(x => {
+            _.range(GameFacts.pauseRectanglesHeight).forEach(y => {
+                matrix.setPixel(
+                    x + GameFacts.leftPauseRectanglesStartX,
+                    y + GameFacts.pauseRectangleStartY,
+                    GameFacts.pauseRectanglesColor.r,
+                    GameFacts.pauseRectanglesColor.g,
+                    GameFacts.pauseRectanglesColor.b
+                );
+
+                matrix.setPixel(
+                        x + GameFacts.rightPauseRectanglesStartX,
+                        y + GameFacts.pauseRectangleStartY,
+                        GameFacts.pauseRectanglesColor.r,
+                        GameFacts.pauseRectanglesColor.g,
+                        GameFacts.pauseRectanglesColor.b
+                    );
+            });
+        })
+    };
+
     return gameState => {
+        const pauseEnded = gameState.pauseStates.pauseEnded;
+
         matrix.clear();
+
+        if (gameState.pauseState.getOrElse(pauseEnded) !== pauseEnded) {
+            drawPauseRectangles();
+        }
 
         if (gameState.victoryDetails.isJust) {
             victoryScreen(gameState);
