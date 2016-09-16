@@ -1,9 +1,9 @@
 "use strict";
 
 const LedMatrix  = require("node-rpi-rgb-led-matrix");
-const Controller = require("./io/controller-driver");
 const GameState  = require("./core/game-state");
 const GameFacts  = require("./core/game-facts");
+const Controller = require("dragonfly-snes");
 const Maybe      = require("data.maybe");
 const bmp        = require("pixel-bmp");
 const _          = require("lodash");
