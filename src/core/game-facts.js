@@ -40,7 +40,7 @@ let GameFacts = {
     /************/
     /* GRAPHICS */
     /************/
-    fieldColor:           { r: 255, g: 255, b: 255 },
+    fieldColor:           { r: 180, g: 180, b: 180 },
     player1Color:         { r: 0,   g: 0,   b: 255 },
     player2Color:         { r: 255, g: 0,   b: 0   },
     ballTrailColor:       { r: 200, g: 100, b: 0   },
